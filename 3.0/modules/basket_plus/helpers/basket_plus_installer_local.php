@@ -18,6 +18,10 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/**
+ * Basket_Plus version 1.1
+ */  
+
 class basket_plus_installer_local{
 /*
  * USED IN: basket_plus_installer
@@ -206,6 +210,8 @@ Bestemd voor:
 			basket_plus::setBasketVar(DATE_TIME_FORMAT,"m/d/Y g:i A");
 			basket_plus::setBasketVar(DECIMAL_SEPARATOR,".");
 			basket_plus::setBasketVar(USE_SIDE_BAR_ONLY,"1");
+			basket_plus::setBasketVar(IS_PHONE_REQ,"1");
+			basket_plus::setBasketVar(AGREE_TERMS_REQ,"1");
 			basket_plus::setBasketVar(ALLOW_PICKUP,"1");
 			basket_plus::setBasketVar(IS_PICKUP_DEFAULT,"0");
 			basket_plus::setBasketVar(PICKUP_LOCATION,"BasketPlusPhoto.com, Order desk");
@@ -313,7 +319,9 @@ If you have already sent this payment, please disregard this notice.<br>
 			basket_plus::setBasketVar(ORDER_DELAYED_EMAIL,"Dear %name,<br>
 <br>
 Your order %order_number has been delayed due to unexpected circumstances.<br> 
-We apologize for the delay and will do our very best to deliver you order as soon as possible.<br>");
+We apologize for the delay and will do our very best to deliver you order as soon as possible.<br>
+<br>
+%order_email_closing");
 			basket_plus::setBasketVar(ORDER_CANCELLED_EMAIL_SUBJECT,"Update of your order %order_number with %webshop: order cancelled");
 			basket_plus::setBasketVar(ORDER_CANCELLED_EMAIL,"Dear %name,<br>
 <br>
@@ -350,6 +358,8 @@ With kind regards,<br>
 			basket_plus::setBasketVar(CURRENCY,"EUR");
 			basket_plus::setBasketVar(DATE_TIME_FORMAT,"d-m-Y G:i");
 			basket_plus::setBasketVar(DECIMAL_SEPARATOR,",");
+			basket_plus::setBasketVar(IS_PHONE_REQ,"1");
+			basket_plus::setBasketVar(AGREE_TERMS_REQ,"1");
 			basket_plus::setBasketVar(ALLOW_PICKUP,"1");
 			basket_plus::setBasketVar(IS_PICKUP_DEFAULT,"0");
 			basket_plus::setBasketVar(PICKUP_LOCATION,"BasketPlusPhoto.com, Postlaan 1, 8888 ZZ Poststad");
@@ -455,7 +465,7 @@ Wij verzoeken u het openstaande bedrag zo spoedig mogelijk te voldoen. U kunt he
 <br>
 Mocht dit bericht uw betaling hebben gekruist, dan kunt u dit verzoek negeren.<br>
 <br>
-Voor vragen of opmerkingen over uw bestelling of de betaling kunt u contact opnemen via %email_order.<br>");
+%order_email_closing");
 			basket_plus::setBasketVar(ORDER_DELAYED_EMAIL_SUBJECT,"Update van uw bestelling %order_number bij %webshop: bestelling vertraagd");
 			basket_plus::setBasketVar(ORDER_DELAYED_EMAIL,"Beste %name,<br>
 <br>

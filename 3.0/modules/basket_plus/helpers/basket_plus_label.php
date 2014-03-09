@@ -18,7 +18,8 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
 class basket_plus_label_Core {
-	//teksts to be translated in view 'admin_translates.html'
+
+//texts to be translated in view 'admin_translates.html'
 	const TEXT_LABEL_ENGLISH = "Label (English)";
 	const TEXT_LABEL_TRANSLATED = "Label (translated)";
 
@@ -66,4 +67,10 @@ class basket_plus_label_Core {
 	const BUTTON_NOTIFY_DELAY = "Send Order delayed notification";
   const BUTTON_CANCEL_ORDER = "Cancel Order";
 	
+//texts to be translated in 'Step 1. Checkout'
+	const MSG_REQ_ALL = "Please fill all required fields!";
+	const MSG_REQ_ADDRESS = "Please fill all required address fields!";
+	const MSG_REQ_REF = "Please fill all required reference fields for pickup!";
+	const MSG_AGREE_TERMS = "To complete your order, you need to agree with our General Terms!";
+
 }

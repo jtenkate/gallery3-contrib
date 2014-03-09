@@ -17,6 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
+/**
+ * Basket_Plus version 1.1
+ */  
 ?>
 <SCRIPT language="JavaScript">
 	function back(){
@@ -24,7 +28,7 @@
 	}
 
   function isValidEmail(s){
-    return (s.indexOf(".")>2)&&(s.indexOf("@")>0);
+    return (s.indexOf(".")>1)&&(s.indexOf("@")>0);
   }
 
   function isHotmail(s) { //not used
@@ -46,57 +50,60 @@
   }
 	//mandatory fields with all delivery options
   function checkMandatory() {
-    var p=true;
+    var pass=true;
     var doc=document.checkout;
     //check initials
-    if(!checkInput(doc.initials)){p=false;}
+    if(!checkInput(doc.initials)){pass=false;}
     //check name
-    if(!checkInput(doc.fname)){p=false;}
-    //check phone
-    if(!checkInput(doc.phone)){p=false;}
+    if(!checkInput(doc.fname)){pass=false;}
+    //check phone if required
+		if(doc.phonereq.checked==true){
+			if(!checkInput(doc.phone)){pass=false;}
+		}
     //check email
-    if((!checkInput(doc.email))||(!isValidEmail(doc.email.value))){se(doc.email);p=false;}
-    if (!p){
-      alert('Please fill all required fields.');
-//NL      alert('U heeft een of meer verplichte velden niet ingevuld.');
+    if((!checkInput(doc.email))||(!isValidEmail(doc.email.value))){
+			se(doc.email);pass=false;
+		}
+		
+		if (!pass){
+				alert(doc.msg_req_all.value);
     }
-    return p;  
+    return pass;  
   }
 	//mandatory fields with all delivery option MAIL
   function checkAddress() {
-    var p=true;
+    var pass=true;
     var doc=document.checkout;
     //check address
-    if(!checkInput(doc.street)){p=false;}
-    if(!checkInput(doc.house)){p=false;}
-    if(!checkInput(doc.postalcode)){p=false;}
-    if(!checkInput(doc.town)){p=false;}
-    if (!p){
-      alert('Please fill all required address fields.');
-//NL      alert('U heeft een of meer adresvelden niet ingevuld.');
+    if(!checkInput(doc.street)){pass=false;}
+    if(!checkInput(doc.house)){pass=false;}
+    if(!checkInput(doc.postalcode)){pass=false;}
+    if(!checkInput(doc.town)){pass=false;}
+    if (!pass){
+				alert(doc.msg_req_address.value);
     }
-    return p;  
+    return pass;  
   }
 	//mandatory fields with all delivery option PICKUP
   function checkRef() {
-    var p=true;
+    var pass=true;
     var doc=document.checkout;
     //check additional reference
-    if(!checkInput(doc.order_ref1)){p=false;}
-    if(!checkInput(doc.order_ref2)){p=false;}
-    if (!p){
-			alert('Please fill both additional reference fields.');
-//NL      alert('U heeft de naam en/of groep van uw kind niet ingevuld.');
+    if(!checkInput(doc.order_ref1)){pass=false;}
+    if(!checkInput(doc.order_ref2)){pass=false;}
+    if (!pass){
+				alert(doc.msg_req_ref.value);
     }
-    return p;  
+    return pass;  
   }
   function checkTerms() {
     var doc=document.checkout;
-    //check agreeTerms
-    if(doc.agreeterms.checked==false){
-		      alert('To complete your order, you need to agree with our General Terms.');
-//NL      alert('Om te kunnen bestellen dient u akkoord te gaan met de Algemene voorwaarden.');
-      return false;
+    //check agreeTerms if required
+		if(doc.termsreq.checked==true){
+			if(doc.agreeterms.checked==false){
+					alert(doc.msg_agree_terms.value);
+				return false;
+			}
     }
     return true;
   }
@@ -120,7 +127,7 @@
   }
   //checkout with pack&post
   function checkCheckoutMail() {
-    var p=true;
+    var pass=true;
     if (checkMandatory()){
       if (checkAddress()) {
         if (checkTerms()) {

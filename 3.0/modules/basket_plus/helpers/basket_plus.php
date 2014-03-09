@@ -17,8 +17,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
-  
-/* ============================================================
+
+/**
+ * Basket_Plus version 1.1
+ */  
+
+ /* ============================================================
  * DEFINED CONSTANTS aim: improve readability of basket code
  * ============================================================ */
 define("META_TAG", "meta_tag");
@@ -44,6 +48,8 @@ define("PAYPAL_TEST_MODE", "paypal_test_mode");
 define("CURRENCY", "currency");
 define("DECIMAL_SEPARATOR", "decimal_separator");
 define("DATE_TIME_FORMAT", "date_time_format");
+define("IS_PHONE_REQ", "is_phone_req");
+define("AGREE_TERMS_REQ", "agree_terms_req");
 define("ORDER_PREFIX", "order_prefix");
 define("ORDER_BANK_ACCOUNT", "order_bank_account");
 define("ORDER_BANK_ACCOUNT_OWNER", "order_bank_account_owner");
@@ -441,7 +447,9 @@ class basket_plus_Core {
     $group->textarea("WEBSHOP_DETAILS")->label(t(basket_plus::formatLabel(WEBSHOP_DETAILS)))->id("g-WEBSHOP_DETAILS");
     $group->dropdown("CURRENCY")->label(t(basket_plus::formatLabel(CURRENCY)))->options(self::$currencies);
     $group->dropdown("DECIMAL_SEPARATOR")->label(t(basket_plus::formatLabel(DECIMAL_SEPARATOR)))->options(self::$decimal_separators);
-    $group->dropdown("DATE_TIME_FORMAT")->label(t(basket_plus::formatLabel(DATE_TIME_FORMAT)))->options(self::$date_time_formats);
+    $group->dropdown("DATE_TIME_FORMAT")->label(t(basket_plus::formatLabel(DATE_TIME_FORMAT)))->options(self::$date_time_formats);		
+    $group->checkbox("IS_PHONE_REQ")->label(t(basket_plus::formatLabel(IS_PHONE_REQ)))->id("g-IS_PHONE_REQ");
+    $group->checkbox("AGREE_TERMS_REQ")->label(t(basket_plus::formatLabel(AGREE_TERMS_REQ)))->id("g-AGREE_TERMS_REQ");		
     $group->checkbox("USE_SIDE_BAR_ONLY")->label(t(basket_plus::formatLabel(USE_SIDE_BAR_ONLY)))->id("g-USE_SIDE_BAR_ONLY");
     $group->checkbox("ALLOW_PICKUP")->label(t(basket_plus::formatLabel(ALLOW_PICKUP)))->id("g-ALLOW_PICKUP");
     $group->checkbox("IS_PICKUP_DEFAULT")->label(t(basket_plus::formatLabel(IS_PICKUP_DEFAULT)))->id("g-IS_PICKUP_DEFAULT");
@@ -483,6 +491,8 @@ class basket_plus_Core {
     $form->configure->CURRENCY->selected(basket_plus::getBasketVar(CURRENCY));
 		$form->configure->DECIMAL_SEPARATOR->selected(basket_plus::getBasketVar(DECIMAL_SEPARATOR));
 		$form->configure->DATE_TIME_FORMAT->selected(basket_plus::getBasketVar(DATE_TIME_FORMAT));
+    $form->configure->IS_PHONE_REQ->checked(basket_plus::getBasketVar(IS_PHONE_REQ));
+    $form->configure->AGREE_TERMS_REQ->checked(basket_plus::getBasketVar(AGREE_TERMS_REQ));
     $form->configure->USE_SIDE_BAR_ONLY->checked(basket_plus::getBasketVar(USE_SIDE_BAR_ONLY));
     $form->configure->ALLOW_PICKUP->checked(basket_plus::getBasketVar(ALLOW_PICKUP));
     $form->configure->IS_PICKUP_DEFAULT->checked(basket_plus::getBasketVar(IS_PICKUP_DEFAULT));
@@ -519,6 +529,8 @@ class basket_plus_Core {
     basket_plus::setBasketVar(CURRENCY,$form->configure->CURRENCY->selected);
 		basket_plus::setBasketVar(DECIMAL_SEPARATOR,$form->configure->DECIMAL_SEPARATOR->selected);
 		basket_plus::setBasketVar(DATE_TIME_FORMAT,$form->configure->DATE_TIME_FORMAT->selected);
+    basket_plus::setBasketVar(IS_PHONE_REQ,$form->configure->IS_PHONE_REQ->checked);
+    basket_plus::setBasketVar(AGREE_TERMS_REQ,$form->configure->AGREE_TERMS_REQ->checked);
     basket_plus::setBasketVar(USE_SIDE_BAR_ONLY,$form->configure->USE_SIDE_BAR_ONLY->checked);
     basket_plus::setBasketVar(ALLOW_PICKUP,$form->configure->ALLOW_PICKUP->checked);
     basket_plus::setBasketVar(IS_PICKUP_DEFAULT,$form->configure->IS_PICKUP_DEFAULT->checked);
@@ -969,7 +981,7 @@ class basket_plus_Core {
  * DESCRIPTION: creates a html table of the order items with a header row
  * REMARKS: contains a thumbnail of each item; as inline display doesn't work (due to authorisation model), 
  *					the thumbnails are replaced with attachments before sending the e-mail and must not be visible
- *					as broken images in the e-mail. Therefor, $max_thumb_size is set to 1.
+ *					as broken images in the e-mail. Therefore, style is set to 'display:none'.
  */
 	static function getOrderLinesHtml($basket) {
 		
@@ -1039,19 +1051,19 @@ class basket_plus_Core {
  */
 	static function getOrderDetailsText($basket) {		
 		$text = "
-".t("Photo").";".t("Quantity").";".t("Product").";".t("Cost")."
+".t("Photo").";".t("Quantity").";".t("Product").";".t("Cost").";".t("URL")."
 ";
     foreach ($basket->contents as $basket_item){
       $item = $basket_item->getItem();
       $prod = ORM::factory("bp_product", $basket_item->product);
-      $text .= $item->title."; ".$basket_item->quantity."; ".$prod->description."; ".basket_plus::formatMoneyForMail($basket_item->quantity*$prod->cost)."
+      $text .= $item->title."; ".$basket_item->quantity."; ".$prod->description."; ".basket_plus::formatMoneyForMail($basket_item->quantity*$prod->cost)."; ".$item->abs_url()."
 ";
 		return $text;
 		}
 	
 	}
 
-	/* ============================================================
+/* ============================================================
  * Basket e-mail functions
  * ============================================================ */
 /*

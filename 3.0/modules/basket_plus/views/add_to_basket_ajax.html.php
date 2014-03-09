@@ -3,7 +3,7 @@
 	<div id="basketThumb">
 		<img src="<?= $item->thumb_url()?>" title="<?= $item->title?>" alt="<?= $item->title?>" />
 	</div>
-	<b>Kies het afdrukformaat en aantal afdrukken</b>
+	<b><?= t("Choose print format and number of prints") ?></b>
 	<div id="basketForm">
 		<?= $form ?>
 	</div>

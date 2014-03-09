@@ -17,6 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
+/**
+ * Basket_Plus version 1.1
+ */  
 ?>
 <SCRIPT language="JavaScript">
   function submitorder(){
@@ -104,8 +108,11 @@
 				<? if ($basket->phone <> ""):?>
 					<?= t("Phone") ?>: <?= $basket->phone ?><br/>
 				<? endif;?>
+				<? $agree_terms_req = basket_plus::getBasketVar(AGREE_TERMS_REQ);
+					if ($agree_terms_req):?>
 				<br/>
 				<input type="checkbox" checked=checked disabled=disabled/> <?= t(" I agree with the General Terms")?>
+				<? endif;?>
       </td>
       <td>
 				<? $postage = $basket->postage_cost();

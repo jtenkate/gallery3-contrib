@@ -17,9 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
-/** Controller functions
- * 2011-05-01 Added function view_all_orders()
- */
+
+/**
+ * Basket_Plus version 1.1
+ */  
 class Basket_Plus_Controller extends Controller {
 
 //============================================================
@@ -118,7 +119,8 @@ class Basket_Plus_Controller extends Controller {
     $template = new Theme_View("page.html", "basket_plus", "checkout");
     $view = new View("checkout.html");
     $basket = Session_Basket::get();
-		
+		$is_phone_req = basket_plus::getBasketVar(IS_PHONE_REQ);
+		$agree_terms_req = basket_plus::getBasketVar(AGREE_TERMS_REQ);
     $form = self::getCheckoutForm($basket);
 		//fill the form with values previously entered
     $form->contact->title->value($basket->title);
@@ -134,11 +136,19 @@ class Basket_Plus_Controller extends Controller {
     $form->contact->country->value($basket->country);
     $form->contact->email->value($basket->email);
     $form->contact->phone->value($basket->phone);
+		$form->contact->phonereq->checked($is_phone_req);
     $form->contact->order_ref1->value($basket->order_ref1);
     $form->contact->order_ref2->value($basket->order_ref2);
     $form->contact->comments->value($basket->comments);
+		$form->contact->termsreq->checked($agree_terms_req);
     $form->contact->agreeterms->checked($basket->agreeterms);
 		$form->contact->paypal->checked($basket->paypal);
+		//messages
+		$form->contact->msg_req_all->value(t(basket_plus_label::MSG_REQ_ALL));
+		$form->contact->msg_req_address->value(t(basket_plus_label::MSG_REQ_ADDRESS));
+		$form->contact->msg_req_ref->value(t(basket_plus_label::MSG_REQ_REF));
+		$form->contact->msg_agree_terms->value(t(basket_plus_label::MSG_AGREE_TERMS));
+		
     $view->form = $form;
 		$view->page_type = "basket";
     $template->content = $view;
@@ -187,10 +197,15 @@ class Basket_Plus_Controller extends Controller {
 		
 	//NOTE: mandatory field checks in JavaScript in the view 'checkout_html.php'
     //labels for mandatory fields
+		$is_phone_req = basket_plus::getBasketVar(IS_PHONE_REQ);
+		$agree_terms_req = basket_plus::getBasketVar(AGREE_TERMS_REQ);
+		
 		$input2_lbl .= "*"; 	//initials
 		$input4_lbl .= "*";		//name
 		$input10_lbl .= "*";	//email
-		$input11_lbl .= "*";	//phone
+		if ($is_phone_req){
+			$input11_lbl .= "*";	//phone
+		}
 		$input15_lbl .= "*";	//general terms
 		
     //labels for mandatory fields with p&p (mail)
@@ -242,6 +257,7 @@ class Basket_Plus_Controller extends Controller {
 		}    
     $group->input("email")->label($input10_lbl)->id("email");
     $group->input("phone")->label($input11_lbl)->id("phone");
+		$group->hidden("phonereq")->label($input11_lbl)->id("phonereq");
 
     //show reference fields only with pickup 
     if (($pickup) && ($postage > 0)){
@@ -252,8 +268,14 @@ class Basket_Plus_Controller extends Controller {
 			$group->hidden("order_ref1")->label($input12_lbl)->id("order_ref1");
 			$group->hidden("order_ref2")->label($input13_lbl)->id("order_ref2");
     }
-		$group->input("comments")->label($input14_lbl)->id("comments");
-    $group->checkbox("agreeterms")->label($input15_lbl)->id("agreeterms");
+		$group->input("comments")->label($input14_lbl)->id("comments");	
+		$group->hidden("termsreq")->label($input15_lbl)->id("termsreq");
+		if ($agree_terms_req){
+			$group->checkbox("agreeterms")->label($input15_lbl)->id("agreeterms");
+    }
+		else{ 
+			$group->hidden("agreeterms")->label($input15_lbl)->id("agreeterms");
+    }
 
 		//show field only when configured
 		if (basket_plus::getBasketVar(USE_PAYPAL)){
@@ -262,6 +284,11 @@ class Basket_Plus_Controller extends Controller {
 		else{
 			$group->hidden("paypal")->id("paypal");
 		}
+		//error messages used in script
+		$group->hidden("msg_req_all")->label("Hidden field")->id("msg_req_all");
+		$group->hidden("msg_req_address")->label("Hidden field")->id("msg_req_address");
+		$group->hidden("msg_req_ref")->label("Hidden field")->id("msg_req_ref");
+		$group->hidden("msg_agree_terms")->label("Hidden field")->id("msg_agree_terms");
     return $form;
   }
 
