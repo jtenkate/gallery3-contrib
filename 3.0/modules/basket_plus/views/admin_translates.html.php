@@ -17,6 +17,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
+/**
+ * Basket_Plus version 1.1
+ */  
 ?>
 <div id="g-admin-configure">
 	<h1> <?= t("Translate Basket Labels") ?> </h1>
@@ -25,7 +29,7 @@
 	<div class="left" ">
 		<h2> <?= t("Order workflow") ?> </h2>
 		<h3> <?= t("'View order' buttons") ?> </h3>
-		<table id="order_ovw" class="bp-table">
+		<table id="order_ovw_workflow" class="bp-table">
 				<tr><th width=50%><?= t(basket_plus_label::TEXT_LABEL_ENGLISH) ?></th><th><?= t(basket_plus_label::TEXT_LABEL_TRANSLATED) ?></th></tr>     
 				<tr><td><?= basket_plus_label::BUTTON_CONFIRM_PAYMENT ?></td><td><?= t(basket_plus_label::BUTTON_CONFIRM_PAYMENT) ?></td>
 				<tr><td><?= basket_plus_label::BUTTON_CONFIRM_DELIVERY ?></td><td><?= t(basket_plus_label::BUTTON_CONFIRM_DELIVERY) ?></td>
@@ -36,7 +40,7 @@
 				<tr><td><?= basket_plus_label::BUTTON_CANCEL_ORDER ?></td><td><?= t(basket_plus_label::BUTTON_CANCEL_ORDER) ?></td>
 		</table>
 		<h3> <?= t("Delivery") ?> </h3>
-		<table id="order_ovw" class="bp-table">
+		<table id="order_delivery" class="bp-table">
 				<tr><th width=50%><?= t(basket_plus_label::TEXT_LABEL_ENGLISH) ?></th><th><?= t(basket_plus_label::TEXT_LABEL_TRANSLATED) ?></th></tr>     
 				<tr><td><?= basket_plus_label::TEXT_DELIVERY_METHOD ?></td><td><?= t(basket_plus_label::TEXT_DELIVERY_METHOD) ?></td>
 				<tr><td><?= basket_plus_label::TEXT_DELIVERY_MAIL ?></td><td><?= t(basket_plus_label::TEXT_DELIVERY_MAIL) ?></td>
@@ -47,8 +51,10 @@
 				<tr><td><?= basket_plus_label::TEXT_DELIVERED_PICKUP ?></td><td><?= t(basket_plus_label::TEXT_DELIVERED_PICKUP) ?></td>
 		</table>
 		<h3> <?= t("E-mail text fragments") ?> </h3>
-		<table id="order_ovw" class="bp-table">
+		<table id="order_email_fragments" class="bp-table">
 				<tr><th width=50%><?= t(basket_plus_label::TEXT_LABEL_ENGLISH) ?></th><th><?= t(basket_plus_label::TEXT_LABEL_TRANSLATED) ?></th></tr>     
+				<tr><td><?= basket_plus_label::TEXT_ORDER_CONFIRMATION ?></td><td><?= t(basket_plus_label::TEXT_ORDER_CONFIRMATION) ?></td>
+				<tr><td><?= basket_plus_label::TEXT_ORDER_UPDATE ?></td><td><?= t(basket_plus_label::TEXT_ORDER_UPDATE) ?></td>
 				<tr><td><?= basket_plus_label::TEXT_OFFLINE_REGARDING ?></td><td><?= t(basket_plus_label::TEXT_OFFLINE_REGARDING) ?></td>
 				<tr><td><?= basket_plus_label::TEXT_ORDER_AMOUNT ?></td><td><?= t(basket_plus_label::TEXT_ORDER_AMOUNT) ?></td>
 				<tr><td><?= basket_plus_label::TEXT_TOTAL_AMOUNT ?></td><td><?= t(basket_plus_label::TEXT_TOTAL_AMOUNT) ?></td>

@@ -17,6 +17,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
+
+/**
+ * Basket_Plus version 1.1
+ */  
+
 class basket_plus_label_Core {
 
 //texts to be translated in view 'admin_translates.html'
@@ -32,6 +37,8 @@ class basket_plus_label_Core {
   const TEXT_OFFLINE_PAYMENT = "You can pay by transferring the total amount to the bank account of";
 	
 	//Mail texts
+	const TEXT_ORDER_CONFIRMATION = "Order confirmation";
+	const TEXT_ORDER_UPDATE = "Order update";
   const TEXT_MAIL_ORDER_DETAILS = "ORDER DETAILS";
   const TEXT_MAIL_DELIVERY_TIME = "Delivery is approximately 10 business days after your payment is received by";
   const TEXT_MAIL_ORDER_FOR = "Order for";
