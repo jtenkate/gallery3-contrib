@@ -65,5 +65,13 @@
 				<tr><td><?= basket_plus_label::TEXT_ORDER_FOR ?></td><td><?= t(basket_plus_label::TEXT_ORDER_FOR) ?></td>
 				<tr><td><?= basket_plus_label::TEXT_ORDERED_ON ?></td><td><?= t(basket_plus_label::TEXT_ORDERED_ON) ?></td>
 		</table>
+		<h3> <?= t("Checkout error messages") ?> </h3>
+		<table id="checkout_messages" class="bp-table">
+				<tr><th width=50%><?= t(basket_plus_label::TEXT_LABEL_ENGLISH) ?></th><th><?= t(basket_plus_label::TEXT_LABEL_TRANSLATED) ?></th></tr>     
+				<tr><td><?= basket_plus_label::MSG_REQ_ALL ?></td><td><?= t(basket_plus_label::MSG_REQ_ALL) ?></td>
+				<tr><td><?= basket_plus_label::MSG_REQ_ADDRESS ?></td><td><?= t(basket_plus_label::MSG_REQ_ADDRESS) ?></td>
+				<tr><td><?= basket_plus_label::MSG_REQ_REF ?></td><td><?= t(basket_plus_label::MSG_REQ_REF) ?></td>
+				<tr><td><?= basket_plus_label::MSG_AGREE_TERMS ?></td><td><?= t(basket_plus_label::MSG_AGREE_TERMS) ?></td>
+		</table>
 		</div>
 </div>
