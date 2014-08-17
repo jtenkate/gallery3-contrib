@@ -19,7 +19,7 @@
  */
 
 /**
- * Basket_Plus version 1.1
+ * Basket_Plus version 1.2
  */  
 
 class basket_plus_installer_local{
@@ -45,7 +45,7 @@ class basket_plus_installer_local{
 				// name, fixed cost, per item cost, is download 
 				bp_postage_band::create("No posting cost",0,0,false);
 				bp_postage_band::create("Default posting cost",2,0,false);
-				bp_postage_band::create("Posting by e-mail (free)",0,0,true);
+				bp_postage_band::create("Delivery by e-mail (free)",0,0,true);
 			}
 	//==========================
 	// SETTINGS FOR DUTCH		
@@ -214,11 +214,12 @@ Bestemd voor:
 			basket_plus::setBasketVar(AGREE_TERMS_REQ,"1");
 			basket_plus::setBasketVar(ALLOW_PICKUP,"1");
 			basket_plus::setBasketVar(IS_PICKUP_DEFAULT,"0");
-			basket_plus::setBasketVar(PICKUP_LOCATION,"BasketPlusPhoto.com, Order desk");
+			basket_plus::setBasketVar(PICKUP_LOCATION,"BasketPlusPhoto.com, Order desk");			
+			basket_plus::setBasketVar(USE_ORDER_REF,"0");
 			basket_plus::setBasketVar(USE_PAYPAL,"1");
 			basket_plus::setBasketVar(PAYPAL_ACCOUNT,"paypal@basketplusphoto.com");
 			basket_plus::setBasketVar(PAYPAL_TEST_MODE,"1");
-			basket_plus::setBasketVar(ORDER_PREFIX,"2013-");
+			basket_plus::setBasketVar(ORDER_PREFIX,"2014-");
 			basket_plus::setBasketVar(ORDER_BANK_ACCOUNT,"1234567890");
 			basket_plus::setBasketVar(ORDER_BANK_ACCOUNT_OWNER,"Photographer");
 			basket_plus::setBasketVar(PAYMENT_OPTIONS,str_replace('$','"','<p>Please fulfil the order payment by transferring the order amount into the bank account of %webshop.<br />
@@ -363,10 +364,11 @@ With kind regards,<br>
 			basket_plus::setBasketVar(ALLOW_PICKUP,"1");
 			basket_plus::setBasketVar(IS_PICKUP_DEFAULT,"0");
 			basket_plus::setBasketVar(PICKUP_LOCATION,"BasketPlusPhoto.com, Postlaan 1, 8888 ZZ Poststad");
+			basket_plus::setBasketVar(USE_ORDER_REF,"1");
 			basket_plus::setBasketVar(USE_PAYPAL,"0");
 			basket_plus::setBasketVar(PAYPAL_ACCOUNT,"paypal@basketplusphoto.com");
 			basket_plus::setBasketVar(PAYPAL_TEST_MODE,"1");
-			basket_plus::setBasketVar(ORDER_PREFIX,"2013-");
+			basket_plus::setBasketVar(ORDER_PREFIX,"2014-");
 			basket_plus::setBasketVar(ORDER_BANK_ACCOUNT,"NL00INGB0000123456 (P123456)");
 			basket_plus::setBasketVar(ORDER_BANK_ACCOUNT_OWNER,"B. Plus, Poststad");
 			basket_plus::setBasketVar(PAYMENT_OPTIONS,str_replace('$','"','<p>U kunt betalen via overmaking op de bankrekening van %webshop.<br />

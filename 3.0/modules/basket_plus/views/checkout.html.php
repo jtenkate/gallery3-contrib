@@ -19,7 +19,7 @@
  */
 
 /**
- * Basket_Plus version 1.1
+ * Basket_Plus version 1.2
  */  
 ?>
 <SCRIPT language="JavaScript">
@@ -57,7 +57,7 @@
     //check name
     if(!checkInput(doc.fname)){pass=false;}
     //check phone if required
-		if(doc.phonereq.checked==true){
+		if(doc.phonereq.value==true){
 			if(!checkInput(doc.phone)){pass=false;}
 		}
     //check email
@@ -88,9 +88,11 @@
   function checkRef() {
     var pass=true;
     var doc=document.checkout;
-    //check additional reference
-    if(!checkInput(doc.order_ref1)){pass=false;}
-    if(!checkInput(doc.order_ref2)){pass=false;}
+    //check additional reference if order ref is used
+		if(doc.useorderref.value==true){
+			if(!checkInput(doc.order_ref1)){pass=false;}
+			if(!checkInput(doc.order_ref2)){pass=false;}
+		}
     if (!pass){
 				alert(doc.msg_req_ref.value);
     }
@@ -99,7 +101,7 @@
   function checkTerms() {
     var doc=document.checkout;
     //check agreeTerms if required
-		if(doc.termsreq.checked==true){
+		if(doc.termsreq.value==true){
 			if(doc.agreeterms.checked==false){
 					alert(doc.msg_agree_terms.value);
 				return false;

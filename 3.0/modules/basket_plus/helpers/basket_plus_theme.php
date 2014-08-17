@@ -25,8 +25,7 @@ class basket_plus_theme_Core {
 
   static function header_top($theme) {
 
-    if (!basket_plus::getBasketVar(USE_SIDE_BAR_ONLY))
-    {
+    if (!basket_plus::getBasketVar(USE_SIDE_BAR_ONLY)){
       $view = new View("basket.html");
 
       $view->basket = Session_Basket::get();
@@ -41,12 +40,11 @@ class basket_plus_theme_Core {
     }
   }
   static function photo_top($theme){
-    if (!basket_plus::getBasketVar(USE_SIDE_BAR_ONLY))
-    {
-        if ( bp_product::isForSale($theme->item()->id)){
-        $view = new View("add_to_basket.html");
+    if (!basket_plus::getBasketVar(USE_SIDE_BAR_ONLY)){
+      if (bp_product::isForSale($theme->item()->id)){
 
         $view->item = $theme->item();
+        $view = new View("add_to_basket.html");
 
         return $view->render();
       }

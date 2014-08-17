@@ -18,6 +18,10 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+/**
+ * Basket_Plus version 1.2
+ */  
+
 class basket_plus_installer
 {
   static function install(){
@@ -110,7 +114,7 @@ class basket_plus_installer
                 `phone` varchar(16) DEFAULT NULL,
                 `order_ref1` varchar(64) DEFAULT NULL,
                 `order_ref2` varchar(32) DEFAULT NULL,
-                `deliverypref` tinyint(2) DEFAULT NULL,
+                `deliverypref` varchar(64) DEFAULT NULL,
                  PRIMARY KEY (`id`))
                  ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 

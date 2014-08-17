@@ -19,7 +19,7 @@
  */
 
 /**
- * Basket_Plus version 1.1
+ * Basket_Plus version 1.2
  */  
 ?>
 <SCRIPT language="JavaScript">
@@ -127,21 +127,24 @@
 				<? endif;?>
 				<?= basket_plus::getPaymentMethodHtml($payment_method,$label_strong); ?>
 				<br/>	
-				<? if ($basket->order_ref1 <> ""):
-						$user = identity::active_user();
-						$user_basket = ORM::factory("bp_user_basket")->where("id", "=", $user->id)->find();
-						$extra_order_info_lbl = $user_basket->extra_order_info_lbl;
-						if ($extra_order_info_lbl == ""):
-							$extra_order_info_lbl = t("Order reference");
-						endif;?>
-						<strong><?= t($extra_order_info_lbl)?></strong>:&nbsp;<?= $basket->order_ref1 ?><br/>
-				<? endif;?>
-				<? if ($basket->order_ref2 <> ""):
-						$extra_order_info_lbl2 = $user_basket->extra_order_info_lbl2;
-						if ($extra_order_info_lbl2 == ""):
-							$extra_order_info_lbl2 = t("Order reference 2");
-						endif;?>
-						<strong><?= t($extra_order_info_lbl2)?></strong>:&nbsp;<?= $basket->order_ref2 ?><br/>
+				<? $use_order_ref = basket_plus::getBasketVar(USE_ORDER_REF);
+					if ($use_order_ref):?>
+					<? if ($basket->order_ref1 <> ""):
+							$user = identity::active_user();
+							$user_basket = ORM::factory("bp_user_basket")->where("id", "=", $user->id)->find();
+							$extra_order_info_lbl = $user_basket->extra_order_info_lbl;
+							if ($extra_order_info_lbl == ""):
+								$extra_order_info_lbl = t("Order reference");
+							endif;?>
+							<strong><?= t($extra_order_info_lbl)?></strong>:&nbsp;<?= $basket->order_ref1 ?><br/>
+					<? endif;?>
+					<? if ($basket->order_ref2 <> ""):
+							$extra_order_info_lbl2 = $user_basket->extra_order_info_lbl2;
+							if ($extra_order_info_lbl2 == ""):
+								$extra_order_info_lbl2 = t("Order reference 2");
+							endif;?>
+							<strong><?= t($extra_order_info_lbl2)?></strong>:&nbsp;<?= $basket->order_ref2 ?><br/>
+					<? endif;?>
 				<? endif;?>
 				<? if ($basket->comments <> ""):?>
 					<br/>

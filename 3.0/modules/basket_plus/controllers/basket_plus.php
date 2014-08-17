@@ -19,7 +19,7 @@
  */
 
 /**
- * Basket_Plus version 1.1
+ * Basket_Plus version 1.2
  */  
 class Basket_Plus_Controller extends Controller {
 
@@ -121,6 +121,8 @@ class Basket_Plus_Controller extends Controller {
     $basket = Session_Basket::get();
 		$is_phone_req = basket_plus::getBasketVar(IS_PHONE_REQ);
 		$agree_terms_req = basket_plus::getBasketVar(AGREE_TERMS_REQ);
+		$use_order_ref = basket_plus::getBasketVar(USE_ORDER_REF);
+		
     $form = self::getCheckoutForm($basket);
 		//fill the form with values previously entered
     $form->contact->title->value($basket->title);
@@ -136,11 +138,12 @@ class Basket_Plus_Controller extends Controller {
     $form->contact->country->value($basket->country);
     $form->contact->email->value($basket->email);
     $form->contact->phone->value($basket->phone);
-		$form->contact->phonereq->checked($is_phone_req);
+		$form->contact->phonereq->value($is_phone_req);
     $form->contact->order_ref1->value($basket->order_ref1);
     $form->contact->order_ref2->value($basket->order_ref2);
+		$form->contact->useorderref->value($use_order_ref);
     $form->contact->comments->value($basket->comments);
-		$form->contact->termsreq->checked($agree_terms_req);
+		$form->contact->termsreq->value($agree_terms_req);
     $form->contact->agreeterms->checked($basket->agreeterms);
 		$form->contact->paypal->checked($basket->paypal);
 		//messages
@@ -199,14 +202,21 @@ class Basket_Plus_Controller extends Controller {
     //labels for mandatory fields
 		$is_phone_req = basket_plus::getBasketVar(IS_PHONE_REQ);
 		$agree_terms_req = basket_plus::getBasketVar(AGREE_TERMS_REQ);
+		$use_order_ref = basket_plus::getBasketVar(USE_ORDER_REF);
 		
 		$input2_lbl .= "*"; 	//initials
 		$input4_lbl .= "*";		//name
 		$input10_lbl .= "*";	//email
+
+    //show only if required (config) 
 		if ($is_phone_req){
 			$input11_lbl .= "*";	//phone
 		}
-		$input15_lbl .= "*";	//general terms
+
+    //show only if required (config) 
+		if ($agree_terms_req){
+			$input15_lbl .= "*";	//general terms
+		}
 		
     //labels for mandatory fields with p&p (mail)
 		$pickup = $basket->pickup;
@@ -257,24 +267,27 @@ class Basket_Plus_Controller extends Controller {
 		}    
     $group->input("email")->label($input10_lbl)->id("email");
     $group->input("phone")->label($input11_lbl)->id("phone");
-		$group->hidden("phonereq")->label($input11_lbl)->id("phonereq");
+		$group->hidden("phonereq")->label("Hidden field")->id("phonereq");
 
-    //show reference fields only with pickup 
-    if (($pickup) && ($postage > 0)){
+    //show reference fields only with pickup and usage of order ref 
+		$group->hidden("useorderref")->label("Hidden field")->id("useorderref");
+    if (($pickup) && ($postage > 0) && ($use_order_ref)){
 			$group->input("order_ref1")->label($input12_lbl)->id("order_ref1");
 			$group->input("order_ref2")->label($input13_lbl)->id("order_ref2");
     }
 		else{ 
-			$group->hidden("order_ref1")->label($input12_lbl)->id("order_ref1");
-			$group->hidden("order_ref2")->label($input13_lbl)->id("order_ref2");
+			$group->hidden("order_ref1")->label("Hidden field")->id("order_ref1");
+			$group->hidden("order_ref2")->label("Hidden field")->id("order_ref2");
     }
 		$group->input("comments")->label($input14_lbl)->id("comments");	
-		$group->hidden("termsreq")->label($input15_lbl)->id("termsreq");
+		$group->hidden("termsreq")->label("Hidden field")->id("termsreq");
+
+    //show only if required (config) 
 		if ($agree_terms_req){
 			$group->checkbox("agreeterms")->label($input15_lbl)->id("agreeterms");
     }
 		else{ 
-			$group->hidden("agreeterms")->label($input15_lbl)->id("agreeterms");
+			$group->hidden("agreeterms")->label("Hidden field")->id("agreeterms");
     }
 
 		//show field only when configured
@@ -289,6 +302,7 @@ class Basket_Plus_Controller extends Controller {
 		$group->hidden("msg_req_address")->label("Hidden field")->id("msg_req_address");
 		$group->hidden("msg_req_ref")->label("Hidden field")->id("msg_req_ref");
 		$group->hidden("msg_agree_terms")->label("Hidden field")->id("msg_agree_terms");
+
     return $form;
   }
 
@@ -636,10 +650,14 @@ class Basket_Plus_Controller extends Controller {
   public function confirm_order_cancelled($id) {
     access::verify_csrf();
     self::check_view_orders();
-		self::cancel_order($id);
-		// Send cancellation confirmation 
-		basket_plus::send_cancellation_confirmation($order);
-		
+    $order = ORM::factory("bp_order", $id);
+    if ($order->loaded()){
+			// Send cancellation confirmation 
+			$order->status = Bp_Order_Model::CANCELLED;
+			$order->save();
+			bp_order_log::log($order,Bp_Order_Log_Model::CANCELLED);
+			basket_plus::send_cancellation_confirmation($order);
+		}		
 		url::redirect("basket_plus/view_orders");
   }
 

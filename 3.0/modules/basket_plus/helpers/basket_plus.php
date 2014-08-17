@@ -19,7 +19,7 @@
  */
 
 /**
- * Basket_Plus version 1.1
+ * Basket_Plus version 1.2
  */  
 
  /* ============================================================
@@ -50,6 +50,7 @@ define("DECIMAL_SEPARATOR", "decimal_separator");
 define("DATE_TIME_FORMAT", "date_time_format");
 define("IS_PHONE_REQ", "is_phone_req");
 define("AGREE_TERMS_REQ", "agree_terms_req");
+define("USE_ORDER_REF", "use_order_ref"); 
 define("ORDER_PREFIX", "order_prefix");
 define("ORDER_BANK_ACCOUNT", "order_bank_account");
 define("ORDER_BANK_ACCOUNT_OWNER", "order_bank_account_owner");
@@ -249,6 +250,7 @@ class basket_plus_Core {
 //			"order_lines"=> $order->text,
 			EMAIL_ORDER => basket_plus::getBasketVar(EMAIL_ORDER),	
 			PICKUP_LOCATION => basket_plus::getPickupLocation(),
+			WEBSHOP_OWNER => basket_plus::getBasketVar(WEBSHOP_OWNER),
 			WEBSITE => basket_plus::getBasketVar(WEBSITE),
 			WEBSHOP => basket_plus::getBasketVar(WEBSHOP)));
 
@@ -413,7 +415,7 @@ class basket_plus_Core {
       return true;
     }
 		//user is not Admin. Check if user is member of group 'shop' (NB retained function from original Basket module)
-    print identity::active_user();
+//    print identity::active_user();
     foreach (identity::active_user()->groups() as $group){
       if ($group->name == 'shop'){
         return true;
@@ -454,6 +456,7 @@ class basket_plus_Core {
     $group->checkbox("ALLOW_PICKUP")->label(t(basket_plus::formatLabel(ALLOW_PICKUP)))->id("g-ALLOW_PICKUP");
     $group->checkbox("IS_PICKUP_DEFAULT")->label(t(basket_plus::formatLabel(IS_PICKUP_DEFAULT)))->id("g-IS_PICKUP_DEFAULT");
     $group->input("PICKUP_LOCATION")->label(t(basket_plus::formatLabel(PICKUP_LOCATION)))->id("g-PICKUP_LOCATION");
+    $group->checkbox("USE_ORDER_REF")->label(t(basket_plus::formatLabel(USE_ORDER_REF)))->id("g-USE_ORDER_REF");
     $group->checkbox("USE_PAYPAL")->label(t(basket_plus::formatLabel(USE_PAYPAL)))->id("g-USE_PAYPAL");
     $group->input("PAYPAL_ACCOUNT")->label(t(basket_plus::formatLabel(PAYPAL_ACCOUNT)))->id("g-PAYPAL_ACCOUNT");
     $group->checkbox("PAYPAL_TEST_MODE")->label(t(basket_plus::formatLabel(PAYPAL_TEST_MODE)))->id("g-PAYPAL_TEST_MODE");
@@ -497,6 +500,7 @@ class basket_plus_Core {
     $form->configure->ALLOW_PICKUP->checked(basket_plus::getBasketVar(ALLOW_PICKUP));
     $form->configure->IS_PICKUP_DEFAULT->checked(basket_plus::getBasketVar(IS_PICKUP_DEFAULT));
 		$form->configure->PICKUP_LOCATION->value(basket_plus::getBasketVar(PICKUP_LOCATION));
+    $form->configure->USE_ORDER_REF->checked(basket_plus::getBasketVar(USE_ORDER_REF));
     $form->configure->USE_PAYPAL->checked(basket_plus::getBasketVar(USE_PAYPAL));
 		$form->configure->PAYPAL_ACCOUNT->value(basket_plus::getBasketVar(PAYPAL_ACCOUNT));
     $form->configure->PAYPAL_TEST_MODE->checked(basket_plus::getBasketVar(PAYPAL_TEST_MODE));
@@ -535,6 +539,7 @@ class basket_plus_Core {
     basket_plus::setBasketVar(ALLOW_PICKUP,$form->configure->ALLOW_PICKUP->checked);
     basket_plus::setBasketVar(IS_PICKUP_DEFAULT,$form->configure->IS_PICKUP_DEFAULT->checked);
     basket_plus::setBasketVar(PICKUP_LOCATION,$form->configure->PICKUP_LOCATION->value);
+    basket_plus::setBasketVar(USE_ORDER_REF,$form->configure->USE_ORDER_REF->checked);
     basket_plus::setBasketVar(USE_PAYPAL,$form->configure->USE_PAYPAL->checked);
     basket_plus::setBasketVar(PAYPAL_ACCOUNT,$form->configure->PAYPAL_ACCOUNT->value);
     basket_plus::setBasketVar(PAYPAL_TEST_MODE,$form->configure->PAYPAL_TEST_MODE->checked);
@@ -942,7 +947,8 @@ class basket_plus_Core {
  */
 	static function getOrderCommentsHtml($basket) {
 		$order_comments = "";
-		if ($basket->order_ref1 <> "") {
+		$use_order_ref = basket_plus::getBasketVar(USE_ORDER_REF);
+		if ($basket->order_ref1 <> "" && $use_order_ref) {
 			$order_ref_lbl = t(basket_plus::getOrderRef(1));
 			$order_comments = "<br>";
 			if ($basket->order_ref2 <> "") {
@@ -1056,11 +1062,14 @@ class basket_plus_Core {
     foreach ($basket->contents as $basket_item){
       $item = $basket_item->getItem();
       $prod = ORM::factory("bp_product", $basket_item->product);
-      $text .= $item->title."; ".$basket_item->quantity."; ".$prod->description."; ".basket_plus::formatMoneyForMail($basket_item->quantity*$prod->cost)."; ".$item->abs_url()."
+			$prod_cost = $basket_item->product_cost;
+			$url = $item->abs_url();
+			$url = str_replace("http://www.", "http://", $url);
+			$url = str_replace("http://", "http://www.", $url);
+      $text .= $item->title."; ".$basket_item->quantity."; ".$prod->description."; ".basket_plus::formatMoneyForMail($prod_cost)."; ".$url."
 ";
-		return $text;
 		}
-	
+		return $text;
 	}
 
 /* ============================================================
@@ -1106,27 +1115,24 @@ class basket_plus_Core {
 		$body = basket_plus::replaceStrings($body, Array(
 			META_TAG => basket_plus::getBasketVar(META_TAG),
 			EMAIL_TEMPLATE_STYLE => basket_plus::getBasketVar(EMAIL_TEMPLATE_STYLE),
-			"order_email_title" => t("Order Update"),
-			"order_email_header" => t("Order Update"),
+			"order_email_title" => t("Order update"),
+			"order_email_header" => t("Order update"),
 			ORDER_EMAIL_LOGO => basket_plus::getBasketVar(ORDER_EMAIL_LOGO),
 			ORDER_EMAIL_FOOTER => basket_plus::getBasketVar(ORDER_EMAIL_FOOTER),
 			"body_text" => basket_plus::getBasketVar($body_text),
 			WEBSHOP_DETAILS => basket_plus::getBasketVar(WEBSHOP_DETAILS)));
 	//second replace variables
 		$body = basket_plus::replaceStrings($body,Array(
-			ORDER_EMAIL_CLOSING => basket_plus::getBasketVar(ORDER_EMAIL_CLOSING),
 "GT" => "<", //TEMP WORKAROUND FOR Kohana limitations (save of certain tags is not working)
 			ORDER_BANK_ACCOUNT_OWNER => basket_plus::getBasketVar(ORDER_BANK_ACCOUNT_OWNER),
 			ORDER_BANK_ACCOUNT => basket_plus::getBasketVar(ORDER_BANK_ACCOUNT),
 			"delivery_method" => basket_plus::deliveredMethodText($order),
-			WEBSITE => basket_plus::getBasketVar(WEBSITE),
 			WEBSHOP_ADDRESS => basket_plus::getBasketVar(WEBSHOP_ADDRESS),
 			WEBSHOP_POSTALCODE => basket_plus::getBasketVar(WEBSHOP_POSTALCODE),
 			WEBSHOP_CITY => basket_plus::getBasketVar(WEBSHOP_CITY),
 			WEBSHOP_PHONE => basket_plus::getBasketVar(WEBSHOP_PHONE),
-			WEBSHOP_OWNER => basket_plus::getBasketVar(WEBSHOP_OWNER),
 			EMAIL_CONTACT => basket_plus::getBasketVar(EMAIL_CONTACT),
-			WEBSHOP => basket_plus::getBasketVar(WEBSHOP))); 
+			ORDER_EMAIL_CLOSING => basket_plus::getBasketVar(ORDER_EMAIL_CLOSING))); 
 	//third replace variables
 		$body = basket_plus::replaceStringsAll($body,$order);
 		$final_msg = basket_plus::preparehtmlmail($body,$from);
