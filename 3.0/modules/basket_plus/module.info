@@ -1,6 +1,6 @@
 name = "Shopping Basket Plus"
 description = "Provides a shopping basket and checkout with order workflow and html e-mails. Based on the module 'basket'. 
-<br />Version 1.1 / 10-03-2014 | By Jeroen ten Kate 
+<br />Version 1.2 / 17-08-2014 | By Jeroen ten Kate 
 | <a href=http://codex.gallery2.org/Gallery3:Modules:Basket_Plus>Module page</a> | <a href=http://galleryproject.org/node/112475#comment-408762>Support</a> | <a href=basket_plus>Settings</a>"
 version = 1
 info_url = "http://codex.gallery2.org/Gallery3:Modules:Basket_plus"
